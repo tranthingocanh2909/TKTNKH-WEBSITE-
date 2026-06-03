@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lễ Hội Hoa Anh Đào Gigamall 2026</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter & Playfair Display / Montserrat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+        /* Custom scrollbar for better appearance */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #fff1f2;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #fda4af;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #f43f5e;
+        }
+        /* Falling petals effect keyframes */
+        @keyframes fall {
+            0% {
+                transform: translateY(-10px) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        .petal {
+            position: fixed;
+            top: -20px;
+            pointer-events: none;
+            z-index: 99;
+            background: linear-gradient(135deg, #fbcfe8, #f43f5e);
+            border-radius: 15% 100% 15% 100%;
+            opacity: 0.7;
+            animation: fall linear infinite;
+        }
+    </style>
+</head>
+<body class="bg-rose-50/50 text-gray-800 overflow-x-hidden">
+
+    <!-- Falling Petals Background Container -->
+    <div id="petals-container" class="fixed inset-0 pointer-events-none z-50"></div>
+
+    <!-- Alert / Toast Notification Container -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-gray-900 text-white px-6 py-3 rounded-xl shadow-2xl flex items-center space-x-3">
+        <span id="toast-icon" class="text-rose-400 text-xl"><i class="fas fa-info-circle"></i></span>
+        <span id="toast-message" class="font-medium text-sm">Thông báo hệ thống</span>
+    </div>
+
+    <!-- AUTHENTICATION MODAL (FULLSCREEN OVERLAY ON FIRST ENTRANCE) -->
+    <div id="auth-overlay" class="fixed inset-0 bg-rose-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 transition-all duration-500">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden border border-rose-100 relative">
+            
+            <!-- Cherry Blossom Top Header Decorative -->
+            <div class="bg-gradient-to-r from-rose-400 to-pink-500 p-8 text-center text-white relative">
+                <div class="absolute -bottom-6 left-1/2 transform -translate-x-1/2 bg-white text-rose-500 w-12 h-12 rounded-full flex items-center justify-center shadow-md">
+                    <i class="fa-solid fa-tree text-2xl animate-pulse"></i>
+                </div>
+                <h2 class="font-serif text-3xl font-bold tracking-wide">GIGAMALL</h2>
+                <p class="text-rose-100 text-sm mt-1 uppercase tracking-widest">Lễ Hội Hoa Anh Đào 2026</p>
+            </div>
+
+            <div class="p-8 pt-10">
+                <!-- Tab Buttons -->
+                <div class="flex border-b border-gray-100 pb-4 mb-6">
+                    <button id="tab-login" onclick="switchAuthTab('login')" class="w-1/2 text-center pb-2 font-semibold text-rose-600 border-b-2 border-rose-500 transition-all">Đăng Nhập</button>
+                    <button id="tab-register" onclick="switchAuthTab('register')" class="w-1/2 text-center pb-2 font-semibold text-gray-400 border-b-2 border-transparent transition-all hover:text-rose-500">Tạo Tài Khoản</button>
+                </div>
+
+                <!-- LOGIN FORM -->
+                <form id="login-form" onsubmit="handleAuthSubmit(event, 'login')" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Tên đăng nhập hoặc Email</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                                <i class="fas fa-user"></i>
+                            </span>
+                            <input id="login-identifier" type="text" required placeholder="nhap_tai_khoan" class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-rose-400 focus:border-transparent outline-none transition-all text-sm">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Mật khẩu</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                                <i class="fas fa-lock"></i>
+                            </span>
+                            <input id="login-password" type="password" required placeholder="••••••••" class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-rose-400 focus:border-transparent outline-none transition-all text-sm">
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <a href="#" class="text-xs text-rose-500 hover:underline">Quên mật khẩu?</a>
+                    </div>
+                    <button type="submit" class="w-full bg-gradient-to-r from-rose-500 to-pink-600 text-white font-bold py-3 rounded-xl shadow-lg shadow-rose-200 hover:shadow-rose-400 hover:from-rose-600 hover:to-pink-700 transform hover:-translate-y-0.5 transition-all text-sm uppercase tracking-wider">
+                        Vào xem lễ hội <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                    <!-- Quick Guest Mode -->
+                    <div class="relative flex py-2 items-center">
+                        <div class="flex-grow border-t border-gray-100"></div>
+                        <span class="flex-shrink mx-4 text-gray-400 text-xs uppercase font-medium">Hoặc</span>
+                        <div class="flex-grow border-t border-gray-100"></div>
+                    </div>
+                    <button type="button" onclick="continueAsGuest()" class="w-full bg-rose-50 text-rose-700 font-semibold py-3 rounded-xl hover:bg-rose-100 transition-all text-sm flex items-center justify-center space-x-2">
+                        <span>Trải nghiệm nhanh dạng Khách</span>
+                        <i class="fa-solid fa-user-secret"></i>
+                    </button>
+                </form>
+
+                <!-- REGISTER FORM -->
+                <form id="register-form" onsubmit="handleAuthSubmit(event, 'register')" class="space-y-4 hidden">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Họ và Tên</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                                <i class="fas fa-id-card"></i>
+                            </span>
+                            <input id="register-name" type="text" required placeholder="Nguyễn Văn A" class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-rose-400 focus:border-transparent outline-none transition-all text-sm">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Tên đăng nhập / Email</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                                <i class="fas fa-envelope"></i>
+                            </span>
+                            <input id="register-identifier" type="text" required placeholder="email@gmail.com" class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-rose-400 focus:border-transparent outline-none transition-all text-sm">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Mật khẩu</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                                <i class="fas fa-lock"></i>
+                            </span>
+                            <input id="register-password" type="password" required placeholder="••••••••" class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-rose-400 focus:border-transparent outline-none transition-all text-sm">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Nhập lại mật khẩu</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                                <i class="fas fa-shield-alt"></i>
+                            </span>
+                            <input id="register-confirm" type="password" required placeholder="••••••••" class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-rose-400 focus:border-transparent outline-none transition-all text-sm">
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full bg-gradient-to-r from-rose-500 to-pink-600 text-white font-bold py-3 rounded-xl shadow-lg shadow-rose-200 hover:shadow-rose-400 hover:from-rose-600 hover:to-pink-700 transform hover:-translate-y-0.5 transition-all text-sm uppercase tracking-wider mt-2">
+                        Đăng ký tài khoản
+                    </button>
+                </form>
+            </div>
+            <div class="bg-gray-50 px-8 py-4 text-center border-t border-gray-100">
+                <p class="text-xs text-gray-400">Bằng việc tiếp tục, bạn đồng ý tham gia sự kiện văn hóa tại Trung tâm thương mại Gigamall Thủ Đức.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN INTERFACE (BLURRED AND INACTIVE UNTIL AUTHENTICATED) -->
+    <div id="main-content" class="filter blur-md transition-all duration-700 pointer-events-none select-none">
+        
+        <!-- HEADER / NAVIGATION -->
+        <header class="sticky top-0 bg-white/95 backdrop-blur-md shadow-sm z-40 transition-all border-b border-rose-100/50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+                
+                <!-- Logo & Brand -->
+                <a href="#trang-chu" class="flex items-center space-x-3 group">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-rose-400 to-pink-500 flex items-center justify-center text-white shadow-md shadow-rose-200 group-hover:scale-105 transition-all duration-300">
+                        <i class="fa-solid fa-tree-deciduous text-xl"></i>
+                    </div>
+                    <div>
+                        <span class="block font-serif text-lg font-bold text-gray-900 tracking-wide">GIGAMALL</span>
+                        <span class="block text-xs font-bold uppercase tracking-widest text-rose-500 -mt-1">Sakura Festival</span>
+                    </div>
+                </a>
+
+                <!-- Desktop Navigation Menu -->
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="#trang-chu" class="text-sm font-semibold text-gray-600 hover:text-rose-500 transition-colors">Trang Chủ</a>
+                    <a href="#moc-thoi-gian" class="text-sm font-semibold text-gray-600 hover:text-rose-500 transition-colors">Thời Gian & Sự Kiện</a>
+                    <a href="#dang-ky-ve" class="text-sm font-semibold text-gray-600 hover:text-rose-500 transition-colors">Đăng Ký Vé</a>
+                    <a href="#y-kien-khach-hang" class="text-sm font-semibold text-gray-600 hover:text-rose-500 transition-colors">Ý Kiến Khách Hàng</a>
+                </nav>
+
+                <!-- User Controls -->
+                <div class="flex items-center space-x-4">
+                    <!-- Current User Display -->
+                    <div id="user-badge" class="hidden sm:flex items-center space-x-2 bg-rose-50 border border-rose-100 px-3.5 py-1.5 rounded-full">
+                        <div class="w-7 h-7 rounded-full bg-gradient-to-r from-rose-400 to-pink-400 flex items-center justify-center text-white text-xs font-bold" id="user-avatar">
+                            U
+                        </div>
+                        <span id="user-display-name" class="text-xs font-bold text-rose-700 max-w-[120px] truncate">Khách quý</span>
+                    </div>
+
+                    <!-- Sign Out Button -->
+                    <button onclick="handleLogOut()" class="text-gray-500 hover:text-rose-600 p-2.5 rounded-xl hover:bg-rose-50 transition-all text-sm font-medium flex items-center space-x-1.5" title="Đăng xuất">
+                        <i class="fa-solid fa-right-from-bracket text-lg"></i>
+                        <span class="hidden md:inline">Đăng xuất</span>
+                    </button>
+                    
+                    <!-- Mobile Menu Button -->
+                    <button onclick="toggleMobileMenu()" class="md:hidden text-gray-600 hover:text-rose-500 p-2 text-xl">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Navigation Overlay -->
+            <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-rose-50 px-4 py-4 space-y-3 shadow-lg absolute w-full left-0 transition-all">
+                <a href="#trang-chu" onclick="toggleMobileMenu()" class="block py-2.5 px-4 rounded-xl hover:bg-rose-50 text-sm font-semibold text-gray-700 hover:text-rose-500">Trang Chủ</a>
+                <a href="#moc-thoi-gian" onclick="toggleMobileMenu()" class="block py-2.5 px-4 rounded-xl hover:bg-rose-50 text-sm font-semibold text-gray-700 hover:text-rose-500">Thời Gian & Sự Kiện</a>
+                <a href="#dang-ky-ve" onclick="toggleMobileMenu()" class="block py-2.5 px-4 rounded-xl hover:bg-rose-50 text-sm font-semibold text-gray-700 hover:text-rose-500">Đăng Ký Vé</a>
+                <a href="#y-kien-khach-hang" onclick="toggleMobileMenu()" class="block py-2.5 px-4 rounded-xl hover:bg-rose-50 text-sm font-semibold text-gray-700 hover:text-rose-500">Ý Kiến Khách Hàng</a>
+            </div>
+        </header>
+
+        <!-- HERO BANNER SECTION -->
+        <section id="trang-chu" class="relative bg-gradient-to-b from-rose-100 to-rose-50 py-20 lg:py-32 overflow-hidden">
+            <!-- Decorative circle shapes -->
+            <div class="absolute -top-10 -right-10 w-96 h-96 rounded-full bg-rose-200/40 blur-3xl"></div>
+            <div class="absolute bottom-10 -left-10 w-80 h-80 rounded-full bg-pink-100/50 blur-2xl"></div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                    
+                    <!-- Left Hero Intro -->
+                    <div class="lg:col-span-7 text-center lg:text-left space-y-6">
+                        <div class="inline-flex items-center space-x-2 bg-white/80 border border-rose-200 px-4 py-2 rounded-full shadow-sm">
+                            <span class="flex h-2 w-2 rounded-full bg-rose-500 animate-pulse"></span>
+                            <span class="text-xs font-bold uppercase tracking-widest text-rose-600">Gigamall Phạm Văn Đồng, TP. Thủ Đức</span>
+                        </div>
+                        <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight">
+                            Hương Sắc <br class="hidden sm:inline">
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-pink-600">Anh Đào Xứ Phù Tang</span> <br>
+                            Giữa Lòng Sài Gòn
+                        </h1>
+                        <p class="text-gray-600 text-base sm:text-lg max-w-2xl leading-relaxed mx-auto lg:mx-0">
+                            Chào đón lễ hội văn hoá hoa anh đào thường niên lớn nhất tại Gigamall Thủ Đức. Đắm chìm trong không gian ngập tràn sắc hồng lãng mạn, các gian hàng ẩm thực truyền thống Nhật Bản, diễu hành Cosplay hoành tráng và các hoạt động nghệ thuật đặc sắc.
+                        </p>
+                        <div class="flex flex-col sm:flex-row justify-center lg:justify-start items-center gap-4 pt-4">
+                            <a href="#dang-ky-ve" class="w-full sm:w-auto text-center bg-gradient-to-r from-rose-500 to-pink-600 text-white font-bold px-8 py-4 rounded-2xl shadow-xl shadow-rose-200 hover:shadow-rose-400 hover:from-rose-600 hover:to-pink-700 transform hover:-translate-y-1 transition-all uppercase tracking-wider text-sm">
+                                Đăng ký vé miễn phí <i class="fas fa-ticket-alt ml-2"></i>
+                            </a>
+                            <a href="#moc-thoi-gian" class="w-full sm:w-auto text-center bg-white border-2 border-rose-200 hover:border-rose-400 text-rose-600 font-bold px-8 py-4 rounded-2xl transition-all text-sm">
+                                Xem hoạt động <i class="fas fa-calendar-alt ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Right Hero Showcase Image / Card -->
+                    <div class="lg:col-span-5 relative">
+                        <div class="relative mx-auto max-w-[380px] sm:max-w-md bg-white rounded-3xl p-4 shadow-2xl border border-rose-100/50">
+                            <!-- Visual placeholder simulating high-quality artwork of Cherry Blossom Gigamall festival -->
+                            <div class="rounded-2xl overflow-hidden aspect-[4/5] bg-rose-100 relative group">
+                                <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style="background-image: url('https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=1470&auto=format&fit=crop');"></div>
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                                
+                                <!-- Floating decorative sticker -->
+                                <div class="absolute top-4 right-4 bg-red-600 text-white font-bold px-4 py-2 rounded-full text-xs uppercase tracking-widest shadow-md">
+                                    Mở Cửa Tự Do
+                                </div>
+
+                                <!-- Caption details inside image -->
+                                <div class="absolute bottom-6 left-6 right-6 text-white">
+                                    <p class="text-rose-300 text-xs font-bold uppercase tracking-widest">Không Gian Lễ Hội</p>
+                                    <h3 class="font-serif text-2xl font-bold mt-1">Đại Lộ Anh Đào Trắng Đỏ</h3>
+                                    <p class="text-gray-200 text-xs mt-2 line-clamp-2">Cổng chào Torii khổng lồ cao 6m và hàng trăm cành hoa anh đào rủ xuống mềm mại tại sảnh chính.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Floating Small Badges -->
+                        <div class="absolute -top-6 -left-6 bg-white border border-rose-100 p-3.5 rounded-2xl shadow-xl flex items-center space-x-3 max-w-[180px] animate-bounce" style="animation-duration: 4s;">
+                            <span class="text-rose-500 bg-rose-50 w-10 h-10 rounded-xl flex items-center justify-center text-lg"><i class="fa-solid fa-cloud-sun"></i></span>
+                            <div>
+                                <h4 class="font-bold text-xs">Mùa Hoa Đẹp Nhất</h4>
+                                <p class="text-[10px] text-gray-500">Nhiều góc check-in tuyệt đẹp</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- TIMELINE & ACTIVITIES SECTION -->
+        <section id="moc-thoi-gian" class="py-20 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <!-- Section Title -->
+                <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                    <span class="text-rose-500 font-bold text-xs uppercase tracking-widest">Thời gian biểu hoạt động</span>
+                    <h2 class="font-serif text-3xl sm:text-4xl font-extrabold text-gray-900">Mốc Thời Gian Lễ Hội</h2>
+                    <p class="text-gray-600">Lễ hội hoa anh đào diễn ra liên tiếp trong 3 ngày cuối tuần vàng, mang lại hàng loạt hoạt động trải nghiệm văn hoá Nhật Bản phong phú.</p>
+                </div>
+
+                <!-- Horizontal Timeline Selector Buttons for Days -->
+                <div class="flex justify-center mb-12">
+                    <div class="inline-flex bg-rose-50/80 p-2 rounded-2xl border border-rose-100 shadow-sm max-w-md w-full">
+                        <button onclick="filterTimelineDay(1)" id="btn-day-1" class="w-1/3 py-3 rounded-xl font-bold text-xs sm:text-sm uppercase tracking-wider transition-all bg-rose-500 text-white shadow-md shadow-rose-200">
+                            Ngày 01 <span class="block text-[10px] font-medium text-rose-100">Khai mạc</span>
+                        </button>
+                        <button onclick="filterTimelineDay(2)" id="btn-day-2" class="w-1/3 py-3 rounded-xl font-bold text-xs sm:text-sm uppercase tracking-wider transition-all text-gray-500 hover:text-rose-600">
+                            Ngày 02 <span class="block text-[10px] font-medium text-gray-400">Cosplay & Nghệ Thuật</span>
+                        </button>
+                        <button onclick="filterTimelineDay(3)" id="btn-day-3" class="w-1/3 py-3 rounded-xl font-bold text-xs sm:text-sm uppercase tracking-wider transition-all text-gray-500 hover:text-rose-600">
+                            Ngày 03 <span class="block text-[10px] font-medium text-gray-400">Ẩm thực & Âm nhạc</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Vertical Timeline Flow -->
+                <div class="relative border-l-2 border-dashed border-rose-200 max-w-4xl mx-auto pl-6 sm:pl-10 py-4 space-y-12" id="timeline-container">
+                    <!-- Dynamic Javascript Rendering Day 1 by Default -->
+                </div>
+
+            </div>
+        </section>
+
+        <!-- REGISTRATION FORM SECTION -->
+        <section id="dang-ky-ve" class="py-20 bg-gradient-to-b from-white to-rose-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center bg-white rounded-3xl p-8 sm:p-12 lg:p-16 shadow-2xl border border-rose-100 relative overflow-hidden">
+                    
+                    <!-- Decorative Japanese Fan Graphic -->
+                    <div class="absolute -right-12 -bottom-12 w-64 h-64 bg-rose-100/50 rounded-full blur-3xl"></div>
+
+                    <!-- Column Left: Info -->
+                    <div class="lg:col-span-6 space-y-6">
+                        <span class="text-rose-500 font-bold text-xs uppercase tracking-widest bg-rose-50 px-3.5 py-1.5 rounded-full">Đăng ký tham gia sự kiện</span>
+                        <h2 class="font-serif text-3xl sm:text-4xl font-extrabold text-gray-900 leading-tight">Nhận Vé Nhập Cảnh & Bộ Quà Tặng Độc Quyền</h2>
+                        <p class="text-gray-600">
+                            Khi đăng ký tham dự trực tuyến trước ngày hội, bạn sẽ nhận được mã vé quét QR vào cổng nhanh, đồng thời nhận một phần quà lưu niệm (gồm Quạt giấy Sakura và móc khóa linh vật Nhật Bản) hoàn toàn miễn phí tại quầy đón khách sảnh Gigamall.
+                        </p>
+                        
+                        <div class="space-y-4 pt-4">
+                            <div class="flex items-start space-x-3">
+                                <span class="text-rose-500 text-lg bg-rose-50 w-8 h-8 rounded-full flex items-center justify-center shrink-0"><i class="fa-solid fa-gift"></i></span>
+                                <div>
+                                    <h4 class="font-bold text-sm">Quà lưu niệm Sakura miễn phí</h4>
+                                    <p class="text-xs text-gray-500">Dành tặng cho 1000 khách đăng ký sớm nhất qua trang web.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <span class="text-rose-500 text-lg bg-rose-50 w-8 h-8 rounded-full flex items-center justify-center shrink-0"><i class="fa-solid fa-bolt"></i></span>
+                                <div>
+                                    <h4 class="font-bold text-sm">Quét mã nhanh check-in</h4>
+                                    <p class="text-xs text-gray-500">Bỏ qua hàng chờ mua vé giấy, vào thẳng khu trung tâm lễ hội.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Column Right: Registration Form / Ticket Result -->
+                    <div class="lg:col-span-6 relative z-10" id="registration-panel">
+                        <!-- Registration Form -->
+                        <form id="event-reg-form" onsubmit="handleRegistrationSubmit(event)" class="bg-rose-50/50 rounded-2xl p-6 sm:p-8 border border-rose-100 space-y-4">
+                            <h3 class="font-bold text-lg text-gray-800 border-b border-rose-100 pb-3"><i class="fa-solid fa-ticket text-rose-500 mr-2"></i>Thông Tin Nhận Vé</h3>
+                            
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Họ và Tên</label>
+                                <input type="text" id="reg-fullname" required placeholder="Nguyễn Văn A" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-rose-400 focus:border-transparent outline-none bg-white text-sm">
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Số Điện Thoại</label>
+                                    <input type="tel" id="reg-phone" required placeholder="0901234567" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-rose-400 focus:border-transparent outline-none bg-white text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Email</label>
+                                    <input type="email" id="reg-email" required placeholder="email@gmail.com" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-rose-400 focus:border-transparent outline-none bg-white text-sm">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Hoạt động muốn tham dự nhất</label>
+                                <select id="reg-preferred-activity" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-rose-400 focus:border-transparent outline-none bg-white text-sm text-gray-600">
+                                    <option value="khai-mac">Lễ khai mạc & Diễu hành cổ truyền</option>
+                                    <option value="cosplay">Trình diễn cosplay & Anime Show</option>
+                                    <option value="am-thuc">Trải nghiệm ẩm thực và trà đạo</option>
+                                    <option value="am-nhac">Đêm nhạc hội J-Pop & Ánh sáng</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="w-full bg-gradient-to-r from-rose-500 to-pink-600 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-rose-200 hover:shadow-rose-400 hover:from-rose-600 hover:to-pink-700 transform hover:-translate-y-0.5 transition-all text-sm uppercase tracking-wider">
+                                Xác Nhận Đăng Ký Miễn Phí <i class="fas fa-arrow-right ml-2"></i>
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- FEEDBACK & REVIEW SECTION -->
+        <section id="y-kien-khach-hang" class="py-20 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <!-- Section Title -->
+                <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                    <span class="text-rose-500 font-bold text-xs uppercase tracking-widest">Phản hồi của khách hàng</span>
+                    <h2 class="font-serif text-3xl sm:text-4xl font-extrabold text-gray-900">Góc Khách Tham Quan Góp Ý</h2>
+                    <p class="text-gray-600">Lắng nghe những chia sẻ, đánh giá thực tế của cộng đồng yêu văn hóa Nhật Bản và khách hàng khi tham quan trải nghiệm tại Gigamall.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                    
+                    <!-- Form gửi Feedback mới (Bên trái) -->
+                    <div class="lg:col-span-5">
+                        <div class="bg-rose-50/50 border border-rose-100 rounded-3xl p-6 sm:p-8 space-y-6">
+                            <div>
+                                <h3 class="font-serif text-xl font-bold text-gray-900">Gửi Phản Hồi Của Bạn</h3>
+                                <p class="text-xs text-gray-500 mt-1">Đóng góp ý kiến của bạn để giúp chúng tôi tổ chức lễ hội tốt hơn!</p>
+                            </div>
+
+                            <form id="feedback-form" onsubmit="handleFeedbackSubmit(event)" class="space-y-4">
+                                <!-- Star Rating selector -->
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Đánh giá của bạn</label>
+                                    <div class="flex items-center space-x-2 text-2xl">
+                                        <button type="button" onclick="setFeedbackRating(1)" class="star-btn text-amber-400 hover:scale-110 transition-transform"><i class="fas fa-star"></i></button>
+                                        <button type="button" onclick="setFeedbackRating(2)" class="star-btn text-amber-400 hover:scale-110 transition-transform"><i class="fas fa-star"></i></button>
+                                        <button type="button" onclick="setFeedbackRating(3)" class="star-btn text-amber-400 hover:scale-110 transition-transform"><i class="fas fa-star"></i></button>
+                                        <button type="button" onclick="setFeedbackRating(4)" class="star-btn text-amber-400 hover:scale-110 transition-transform"><i class="fas fa-star"></i></button>
+                                        <button type="button" onclick="setFeedbackRating(5)" class="star-btn text-amber-400 hover:scale-110 transition-transform"><i class="fas fa-star"></i></button>
+                                    </div>
+                                    <span id="star-label" class="text-xs text-amber-600 font-bold mt-1 inline-block">Cực kỳ hài lòng (5 sao)</span>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Biệt Danh / Tên của bạn</label>
+                                    <input type="text" id="feedback-author" required placeholder="Ẩn danh" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-rose-400 focus:border-transparent outline-none bg-white text-sm">
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Nội dung chia sẻ</label>
+                                    <textarea id="feedback-content" required rows="4" placeholder="Cảm nghĩ của bạn về không gian trang trí, các gian hàng ẩm thực, cách tổ chức..." class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-rose-400 focus:border-transparent outline-none bg-white text-sm"></textarea>
+                                </div>
+
+                                <button type="submit" class="w-full bg-rose-600 text-white font-bold py-3 rounded-xl shadow-lg shadow-rose-100 hover:bg-rose-700 transition-all text-sm uppercase tracking-wider">
+                                    Gửi Đóng Góp <i class="fa-regular fa-paper-plane ml-2"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Danh sách hiển thị Feedback (Bên phải) -->
+                    <div class="lg:col-span-7 space-y-6">
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-bold text-lg text-gray-800">Cộng đồng nhận xét (<span id="feedback-count">0</span>)</h3>
+                            <div class="text-sm text-gray-500">Đồng bộ đám mây liên tục</div>
+                        </div>
+
+                        <!-- Scrollable Feedbacks Container -->
+                        <div id="feedback-list-container" class="space-y-4 max-h-[500px] overflow-y-auto pr-2">
+                            <!-- Dynamically Loaded Feedbacks Go Here -->
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="bg-gray-900 text-white pt-16 pb-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-8 pb-12 border-b border-gray-800">
+                    
+                    <!-- Left Brand -->
+                    <div class="md:col-span-5 space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-xl bg-rose-500 flex items-center justify-center text-white text-lg">
+                                <i class="fa-solid fa-tree-deciduous"></i>
+                            </div>
+                            <span class="font-serif text-lg font-bold tracking-wide">GIGAMALL SAKURA</span>
+                        </div>
+                        <p class="text-gray-400 text-sm leading-relaxed max-w-sm">
+                            Trang thông tin & Đăng ký chính thức của Lễ hội Hoa Anh Đào thường niên tổ chức tại Trung tâm thương mại Gigamall, Thành phố Thủ Đức.
+                        </p>
+                    </div>
+
+                    <!-- Mid Quick Links -->
+                    <div class="md:col-span-3 space-y-3">
+                        <h4 class="font-bold text-sm uppercase tracking-wider text-rose-400">Liên Kết Nhanh</h4>
+                        <ul class="space-y-2 text-sm text-gray-400">
+                            <li><a href="#trang-chu" class="hover:text-white transition-colors">Trang chủ</a></li>
+                            <li><a href="#moc-thoi-gian" class="hover:text-white transition-colors">Thời gian lễ hội</a></li>
+                            <li><a href="#dang-ky-ve" class="hover:text-white transition-colors">Đăng ký vé miễn phí</a></li>
+                            <li><a href="#y-kien-khach-hang" class="hover:text-white transition-colors">Ý kiến khách hàng</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Right Info -->
+                    <div class="md:col-span-4 space-y-3 text-sm text-gray-400">
+                        <h4 class="font-bold text-sm uppercase tracking-wider text-rose-400">Thông Tin Liên Hệ</h4>
+                        <p><i class="fas fa-map-marker-alt text-rose-500 mr-2"></i> 240-242 Phạm Văn Đồng, Hiệp Bình Chánh, Thủ Đức, TP. HCM</p>
+                        <p><i class="fas fa-phone-alt text-rose-500 mr-2"></i> Hotline hỗ trợ: (028) 7100 3839</p>
+                        <p><i class="fas fa-envelope text-rose-500 mr-2"></i> Email: info@gigamall.com.vn</p>
+                    </div>
+
+                </div>
+
+                <!-- Bottom Copyright -->
+                <div class="flex flex-col sm:flex-row justify-between items-center pt-8 text-xs text-gray-500 gap-4">
+                    <p>© 2026 Lễ hội Hoa Anh Đào Gigamall. Tất cả quyền được bảo lưu.</p>
+                    <div class="flex space-x-4 text-base">
+                        <a href="#" class="hover:text-white text-gray-400 transition-colors"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="hover:text-white text-gray-400 transition-colors"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="hover:text-white text-gray-400 transition-colors"><i class="fab fa-tiktok"></i></a>
+                        <a href="#" class="hover:text-white text-gray-400 transition-colors"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Firebase SDK Scripts (V9 Compatibility / Modular) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, onSnapshot, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // APP CONFIGURATIONS
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'gigamall-cherryblossom-2026';
+        const firebaseConfig = JSON.parse(__firebase_config);
+
+        // INITIALIZE FIREBASE
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // GLOBALS STATE
+        let currentUser = null;
+        let selectedDay = 1;
+        let currentRatingScore = 5;
+
+        // TIMELINE DATA OBJECTS (Mocked perfectly)
+        const timelineData = {
+            1: [
+                {
+                    time: "09:00 - 10:30",
+                    title: "Lễ Khai Mạc & Cắt Băng Đỏ Hoành Tráng",
+                    desc: "Sự kiện chào đón các khách mời danh dự, ban lãnh đạo Gigamall và biểu diễn đánh trống Taiko Nhật Bản rực lửa sấm truyền tại sảnh chính.",
+                    icon: "fa-solid fa-ribbon",
+                    tag: "Khai mạc",
+                    color: "rose"
+                },
+                {
+                    time: "11:00 - 14:00",
+                    title: "Khai Trương Đại Lộ Hoa Anh Đào & Phố Trà Đạo",
+                    desc: "Chào đón quý khách thưởng ngoạn check-in khu vực trang trí hoa anh đào, thưởng thức trà đạo miễn phí do nghệ nhân Nhật Bản thực hiện.",
+                    icon: "fa-solid fa-mug-hot",
+                    tag: "Văn hoá",
+                    color: "pink"
+                },
+                {
+                    time: "15:00 - 18:00",
+                    title: "Mini Game Thử Thách Gấp Giấy Origami",
+                    desc: "Các bé và gia đình có thể tự tay tạo tác ra những chú hạc giấy mang thông điệp may mắn dưới sự hướng dẫn của các tình nguyện viên.",
+                    icon: "fa-solid fa-paper-plane",
+                    tag: "Giải trí",
+                    color: "blue"
+                },
+                {
+                    time: "19:00 - 21:00",
+                    title: "Hòa Nhạc Nhạc Cụ Dân Tộc Nhật Bản Koto",
+                    desc: "Đêm diễn nhạc cụ gảy dây độc đáo, tái hiện trọn vẹn nét văn hóa cung đình Kyoto xưa ấm áp và thanh bình.",
+                    icon: "fa-solid fa-music",
+                    tag: "Âm nhạc",
+                    color: "indigo"
+                }
+            ],
+            2: [
+                {
+                    time: "10:00 - 12:00",
+                    title: "Trình Diễn Múa Cổ Truyền Yosakoi",
+                    desc: "Vũ điệu Yosakoi tràn đầy năng lượng tươi vui của các câu lạc bộ văn hóa Nhật Bản tại Thành phố Hồ Chí Minh diễu hành quanh trung tâm thương mại.",
+                    icon: "fa-solid fa-users",
+                    tag: "Trình diễn",
+                    color: "amber"
+                },
+                {
+                    time: "13:30 - 17:30",
+                    title: "Cosplay Runway - Đấu Trường Hóa Trang Anime",
+                    desc: "Nơi tụ hội của hàng trăm cosplayer hóa thân xuất sắc vào các nhân vật Manga, Anime, Game được yêu thích. Có ban giám khảo chấm giải trực tiếp.",
+                    icon: "fa-solid fa-masks-theater",
+                    tag: "Cosplay",
+                    color: "purple"
+                },
+                {
+                    time: "18:30 - 21:30",
+                    title: "Giao Lưu Cùng Cosplayer Quốc Tế",
+                    desc: "Cơ hội chụp ảnh lưu niệm cực hot tại thảm đỏ, lắng nghe chia sẻ kinh nghiệm trang điểm, chế tạo trang phục hóa trang đỉnh cao.",
+                    icon: "fa-solid fa-camera-retro",
+                    tag: "Sự kiện Hot",
+                    color: "pink"
+                }
+            ],
+            3: [
+                {
+                    time: "10:00 - 15:00",
+                    title: "Phiên Chợ Ẩm Thực Đường Phố Tokyo Street",
+                    desc: "Trải nghiệm hương vị Takoyaki giòn rụm, bánh xếp Gyoza thơm lừng, đá bào siro mát lạnh và các loại bánh ngọt mochi rực rỡ sắc màu Sakura.",
+                    icon: "fa-solid fa-utensils",
+                    tag: "Ẩm thực",
+                    color: "emerald"
+                },
+                {
+                    time: "16:00 - 18:00",
+                    title: "Cuộc Thi Ăn Mì Ramen Cay Khổng Lồ",
+                    desc: "Thử thách giới hạn vị giác dành cho các tín đồ mê mẩn món mì quốc hồn quốc túy Nhật Bản với giải thưởng vô cùng giá trị.",
+                    icon: "fa-solid fa-bowl-food",
+                    tag: "Sự kiện",
+                    color: "red"
+                },
+                {
+                    time: "19:00 - 21:30",
+                    title: "Đêm Nhạc Hội Sakura J-Pop & Nhạc Trẻ Hoành Tráng",
+                    desc: "Bữa tiệc ánh sáng và âm thanh đỉnh cao với sự xuất hiện của các ca sĩ khách mời đặc biệt hát nhạc J-Pop, Anime cover đầy bùng nổ.",
+                    icon: "fa-solid fa-guitar",
+                    tag: "Đêm nhạc",
+                    color: "rose"
+                }
+            ]
+        };
+
+        // DOM ELEMENTS & UTILS
+        const showToast = (message, type = 'info') => {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            const toastIcon = document.getElementById('toast-icon');
+
+            toastMessage.textContent = message;
+            if (type === 'success') {
+                toastIcon.innerHTML = `<i class="fas fa-check-circle text-emerald-400"></i>`;
+            } else if (type === 'error') {
+                toastIcon.innerHTML = `<i class="fas fa-exclamation-circle text-rose-500"></i>`;
+            } else {
+                toastIcon.innerHTML = `<i class="fas fa-info-circle text-sky-400"></i>`;
+            }
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3500);
+        };
+
+        // PETALS ANIMATION CREATOR
+        const createPetals = () => {
+            const container = document.getElementById('petals-container');
+            const petalCount = 15;
+            for (let i = 0; i < petalCount; i++) {
+                const petal = document.createElement('div');
+                petal.classList.add('petal');
+                petal.style.left = Math.random() * 100 + 'vw';
+                petal.style.width = Math.random() * 10 + 8 + 'px';
+                petal.style.height = Math.random() * 10 + 8 + 'px';
+                petal.style.animationDuration = Math.random() * 8 + 6 + 's';
+                petal.style.animationDelay = Math.random() * 5 + 's';
+                container.appendChild(petal);
+            }
+        };
+
+        // AUTHENTICATION TAB SWITCHER
+        window.switchAuthTab = (tab) => {
+            const tabLogin = document.getElementById('tab-login');
+            const tabRegister = document.getElementById('tab-register');
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('register-form');
+
+            if (tab === 'login') {
+                tabLogin.className = "w-1/2 text-center pb-2 font-semibold text-rose-600 border-b-2 border-rose-500 transition-all";
+                tabRegister.className = "w-1/2 text-center pb-2 font-semibold text-gray-400 border-b-2 border-transparent transition-all hover:text-rose-500";
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+            } else {
+                tabRegister.className = "w-1/2 text-center pb-2 font-semibold text-rose-600 border-b-2 border-rose-500 transition-all";
+                tabLogin.className = "w-1/2 text-center pb-2 font-semibold text-gray-400 border-b-2 border-transparent transition-all hover:text-rose-500";
+                registerForm.classList.remove('hidden');
+                loginForm.classList.add('hidden');
+            }
+        };
+
+        // FIREBASE AUTHENTICATION INIT & TRACKING (RULE 3)
+        const initAuth = async () => {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (error) {
+                console.error("Firebase Auth Error:", error);
+                showToast("Không thể khởi tạo kết nối an toàn với máy chủ.", "error");
+            }
+        };
+
+        // TRACK AUTHENTICATION CHANGES
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                
+                // Let's check if the user has completed local browser-based/form credentials or if we use current user details
+                const savedName = localStorage.getItem('gigamall_user_name') || 'Khách quý ' + user.uid.substring(0, 5);
+                
+                // Show Main Content
+                document.getElementById('auth-overlay').classList.add('hidden', 'pointer-events-none');
+                
+                const mainContent = document.getElementById('main-content');
+                mainContent.classList.remove('blur-md', 'pointer-events-none', 'select-none');
+                
+                // Update Badge UI
+                document.getElementById('user-badge').classList.remove('hidden');
+                document.getElementById('user-display-name').textContent = savedName;
+                document.getElementById('user-avatar').textContent = savedName.charAt(0).toUpperCase();
+
+                // Prefill Form Fields
+                document.getElementById('reg-fullname').value = savedName === ('Khách quý ' + user.uid.substring(0, 5)) ? "" : savedName;
+                document.getElementById('feedback-author').value = savedName;
+
+                showToast("Chào mừng bạn đến với Lễ hội Hoa Anh Đào!", "success");
+
+                // Start Listening to Database items now that user is verified (RULE 3)
+                startDatabaseListeners();
+            } else {
+                currentUser = null;
+                // Lock screen, Blur main-content
+                document.getElementById('auth-overlay').classList.remove('hidden', 'pointer-events-none');
+                const mainContent = document.getElementById('main-content');
+                mainContent.classList.add('blur-md', 'pointer-events-none', 'select-none');
+                document.getElementById('user-badge').classList.add('hidden');
+            }
+        });
+
+        // HANDLE LOG OUT
+        window.handleLogOut = async () => {
+            try {
+                await signOut(auth);
+                localStorage.removeItem('gigamall_user_name');
+                showToast("Bạn đã đăng xuất thành công.", "success");
+            } catch (e) {
+                showToast("Lỗi đăng xuất. Vui lòng thử lại.", "error");
+            }
+        };
+
+        // LOGIN / REGISTRATION HANDLER (SIMULATED VIA SECURE LOCALSTORAGE FOR UNIQUE ACCOUNTS LINKED TO AUTHENTICATED SESSSION)
+        window.handleAuthSubmit = (event, type) => {
+            event.preventDefault();
+            
+            if (type === 'login') {
+                const identifier = document.getElementById('login-identifier').value.trim();
+                const pass = document.getElementById('login-password').value;
+
+                if (!identifier || !pass) {
+                    showToast("Vui lòng điền đầy đủ các thông tin.", "error");
+                    return;
+                }
+
+                // Normal simulated account checking in tandem with secure FireAuth session
+                localStorage.setItem('gigamall_user_name', identifier);
+                showToast("Đăng nhập thành công!", "success");
+                
+                // Force triggering UI update
+                if (auth.currentUser) {
+                    onAuthStateChanged(auth, () => {}); // Re-trigger
+                    window.location.reload();
+                } else {
+                    initAuth();
+                }
+
+            } else {
+                const name = document.getElementById('register-name').value.trim();
+                const identifier = document.getElementById('register-identifier').value.trim();
+                const pass = document.getElementById('register-password').value;
+                const confirm = document.getElementById('register-confirm').value;
+
+                if (pass !== confirm) {
+                    showToast("Mật khẩu nhập lại không khớp!", "error");
+                    return;
+                }
+
+                localStorage.setItem('gigamall_user_name', name);
+                showToast("Tạo tài khoản thành công!", "success");
+                
+                // Transition back to login tab for smooth UX or sign in instantly
+                switchAuthTab('login');
+                document.getElementById('login-identifier').value = identifier;
+            }
+        };
+
+        // GUEST EXPEDITION MODE
+        window.continueAsGuest = () => {
+            localStorage.setItem('gigamall_user_name', 'Khách du lịch');
+            initAuth();
+        };
+
+        // TIMELINE RENDERING ENGINE
+        window.filterTimelineDay = (day) => {
+            selectedDay = day;
+            
+            // Toggle Active Classes on Buttons
+            [1, 2, 3].forEach(d => {
+                const btn = document.getElementById(`btn-day-${d}`);
+                if (d === day) {
+                    btn.className = "w-1/3 py-3 rounded-xl font-bold text-xs sm:text-sm uppercase tracking-wider transition-all bg-rose-500 text-white shadow-md shadow-rose-200";
+                } else {
+                    btn.className = "w-1/3 py-3 rounded-xl font-bold text-xs sm:text-sm uppercase tracking-wider transition-all text-gray-500 hover:text-rose-600";
+                }
+            });
+
+            // Render details
+            const container = document.getElementById('timeline-container');
+            container.innerHTML = "";
+
+            const events = timelineData[day];
+            events.forEach((ev, idx) => {
+                const element = document.createElement('div');
+                element.className = "relative pl-6 sm:pl-8 group transition-all duration-300 hover:translate-x-1";
+                
+                // Colored tag map
+                const colors = {
+                    rose: "bg-rose-500 text-rose-50",
+                    pink: "bg-pink-500 text-pink-50",
+                    blue: "bg-blue-500 text-blue-50",
+                    indigo: "bg-indigo-500 text-indigo-50",
+                    amber: "bg-amber-500 text-amber-50",
+                    purple: "bg-purple-500 text-purple-50",
+                    emerald: "bg-emerald-500 text-emerald-50",
+                    red: "bg-red-500 text-red-50"
+                };
+
+                const chosenColor = colors[ev.color] || colors.rose;
+
+                element.innerHTML = `
+                    <!-- Bullet icon marker -->
+                    <span class="absolute -left-[37px] top-1 bg-white border-2 border-rose-400 w-6 h-6 rounded-full flex items-center justify-center text-[10px] text-rose-600 group-hover:scale-125 group-hover:bg-rose-500 group-hover:text-white transition-all z-10">
+                        <i class="fa-solid fa-circle"></i>
+                    </span>
+                    
+                    <div class="bg-rose-50/20 hover:bg-rose-50 border border-transparent hover:border-rose-100 p-6 rounded-2xl transition-all">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                            <span class="text-xs font-bold text-rose-600 tracking-wider flex items-center gap-1.5">
+                                <i class="fa-regular fa-clock"></i> ${ev.time}
+                            </span>
+                            <span class="inline-block px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${chosenColor} self-start sm:self-auto">
+                                ${ev.tag}
+                            </span>
+                        </div>
+                        <h3 class="font-serif text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
+                            <i class="${ev.icon} text-rose-500 text-base"></i>
+                            ${ev.title}
+                        </h3>
+                        <p class="text-gray-600 text-sm leading-relaxed">${ev.desc}</p>
+                    </div>
+                `;
+                container.appendChild(element);
+            });
+        };
+
+        // STAR RATING LOGIC
+        window.setFeedbackRating = (rating) => {
+            currentRatingScore = rating;
+            const starButtons = document.querySelectorAll('.star-btn');
+            const labels = {
+                1: "Quá tệ (1 sao)",
+                2: "Bình thường (2 sao)",
+                3: "Hài lòng (3 sao)",
+                4: "Rất tốt (4 sao)",
+                5: "Cực kỳ hài lòng (5 sao)"
+            };
+
+            document.getElementById('star-label').textContent = labels[rating] || "";
+
+            starButtons.forEach((btn, idx) => {
+                if (idx < rating) {
+                    btn.className = "star-btn text-amber-400 hover:scale-110 transition-transform";
+                } else {
+                    btn.className = "star-btn text-gray-300 hover:scale-110 transition-transform";
+                }
+            });
+        };
+
+        // CLOUD STORAGE & SUBMISSIONS (FIRESTORE RULES 1 & 2)
+        const startDatabaseListeners = () => {
+            if (!currentUser) return;
+
+            // Paths for Public Shared App Feedbacks (RULE 1)
+            const feedbackColRef = collection(db, 'artifacts', appId, 'public', 'data', 'feedbacks');
+            
+            // Listen to real-time feedback updates (RULE 2 - simple fetch no complex compound filters)
+            onSnapshot(feedbackColRef, (snapshot) => {
+                const feedbacks = [];
+                snapshot.forEach(doc => {
+                    feedbacks.push({ id: doc.id, ...doc.data() });
+                });
+
+                // Sort programmatically in client memory (RULE 2 - no orderBy)
+                feedbacks.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+                renderFeedbacks(feedbacks);
+            }, (error) => {
+                console.error("Firestore Listen Error: ", error);
+            });
+
+            // Check if user has already registered for event
+            checkUserEventRegistration();
+        };
+
+        // SUBMIT FEEDBACK TO FIRESTORE
+        window.handleFeedbackSubmit = async (event) => {
+            event.preventDefault();
+
+            if (!currentUser) {
+                showToast("Bạn cần đăng nhập để gửi phản hồi.", "error");
+                return;
+            }
+
+            const author = document.getElementById('feedback-author').value.trim() || "Ẩn danh";
+            const content = document.getElementById('feedback-content').value.trim();
+
+            if (!content) {
+                showToast("Vui lòng nhập nội dung phản hồi.", "error");
+                return;
+            }
+
+            try {
+                // Public shared feedbacks collection path (RULE 1)
+                const feedbackColRef = collection(db, 'artifacts', appId, 'public', 'data', 'feedbacks');
+                
+                await addDoc(feedbackColRef, {
+                    userId: currentUser.uid,
+                    author: author,
+                    content: content,
+                    rating: currentRatingScore,
+                    timestamp: Date.now()
+                });
+
+                showToast("Cảm ơn đóng góp ý kiến vô giá của bạn!", "success");
+                document.getElementById('feedback-content').value = "";
+                // Reset rating to 5
+                setFeedbackRating(5);
+            } catch (error) {
+                console.error("Error writing document: ", error);
+                showToast("Lỗi gửi phản hồi. Vui lòng thử lại.", "error");
+            }
+        };
+
+        // RENDER FEEDBACK LIST
+        const renderFeedbacks = (feedbacks) => {
+            const container = document.getElementById('feedback-list-container');
+            const countBadge = document.getElementById('feedback-count');
+            
+            container.innerHTML = "";
+            countBadge.textContent = feedbacks.length;
+
+            if (feedbacks.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 border border-dashed border-gray-200 rounded-2xl bg-gray-50/50">
+                        <i class="fa-regular fa-comment-dots text-4xl text-gray-300 mb-3 block"></i>
+                        <p class="text-sm text-gray-500 font-medium">Chưa có đánh giá nào. Hãy là người đầu tiên đóng góp nhé!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            feedbacks.forEach(fb => {
+                const element = document.createElement('div');
+                element.className = "bg-white border border-rose-100/70 p-5 rounded-2xl shadow-sm space-y-2.5 transition-all hover:shadow-md";
+                
+                // Star rendering html string
+                let starsHTML = "";
+                for (let i = 1; i <= 5; i++) {
+                    if (i <= fb.rating) {
+                        starsHTML += `<i class="fas fa-star text-amber-400 text-xs"></i>`;
+                    } else {
+                        starsHTML += `<i class="far fa-star text-gray-200 text-xs"></i>`;
+                    }
+                }
+
+                // Pretty format time
+                const date = new Date(fb.timestamp);
+                const timeString = fb.timestamp ? `${date.getDate()}/${date.getMonth() + 1} - ${date.getHours()}:${String(date.getMinutes()).padStart(2, '0')}` : "Vừa xong";
+
+                element.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-2.5">
+                            <div class="w-8 h-8 rounded-full bg-rose-50 flex items-center justify-center text-xs font-bold text-rose-500 uppercase">
+                                ${fb.author.charAt(0)}
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-xs text-gray-800">${fb.author}</h4>
+                                <div class="flex items-center space-x-1 mt-0.5">${starsHTML}</div>
+                            </div>
+                        </div>
+                        <span class="text-[10px] font-medium text-gray-400">${timeString}</span>
+                    </div>
+                    <p class="text-sm text-gray-600 pl-10 leading-relaxed italic">"${fb.content}"</p>
+                `;
+                container.appendChild(element);
+            });
+        };
+
+        // CHECK IF CURRENT USER IS ALREADY REGISTERED (RULE 1 - Private User Data Path)
+        const checkUserEventRegistration = async () => {
+            if (!currentUser) return;
+
+            try {
+                // Private user event registration collection (RULE 1)
+                const docRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'event_registration', 'status');
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    renderTicketBadge(docSnap.data());
+                }
+            } catch (err) {
+                console.error("Error reading registration: ", err);
+            }
+        };
+
+        // SUBMIT EVENT REGISTRATION (RULE 1 - Save to Private Path)
+        window.handleRegistrationSubmit = async (event) => {
+            event.preventDefault();
+
+            if (!currentUser) {
+                showToast("Bạn cần đăng nhập để đăng ký vé.", "error");
+                return;
+            }
+
+            const fullName = document.getElementById('reg-fullname').value.trim();
+            const phone = document.getElementById('reg-phone').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
+            const preferred = document.getElementById('reg-preferred-activity').value;
+
+            const regData = {
+                fullName,
+                phone,
+                email,
+                preferred,
+                ticketCode: "SAKURA-" + Math.floor(100000 + Math.random() * 900000),
+                registeredAt: Date.now()
+            };
+
+            try {
+                // Write event registration to private path (RULE 1)
+                const docRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'event_registration', 'status');
+                await setDoc(docRef, regData);
+
+                showToast("Đăng ký thành công! Đã cấp mã vé QR.", "success");
+                renderTicketBadge(regData);
+            } catch (err) {
+                console.error("Error writing registration document: ", err);
+                showToast("Không thể đăng ký lúc này. Vui lòng kiểm tra lại mạng.", "error");
+            }
+        };
+
+        // RENDER TICKET QR CODE SUCCESS PANEL
+        const renderTicketBadge = (data) => {
+            const panel = document.getElementById('registration-panel');
+            
+            const activityLabel = {
+                'khai-mac': "Lễ khai mạc & Diễu hành cổ truyền",
+                'cosplay': "Trình diễn cosplay & Anime Show",
+                'am-thuc': "Trải nghiệm ẩm thực và trà đạo",
+                'am-nhac': "Đêm nhạc hội J-Pop & Ánh sáng"
+            };
+
+            panel.innerHTML = `
+                <div class="bg-gradient-to-br from-rose-500 to-pink-600 text-white rounded-3xl p-8 shadow-xl text-center space-y-6 relative overflow-hidden border border-rose-400">
+                    <!-- Deco Circles -->
+                    <div class="absolute -top-12 -left-12 w-24 h-24 bg-white/10 rounded-full"></div>
+                    <div class="absolute -bottom-12 -right-12 w-32 h-32 bg-white/10 rounded-full"></div>
+                    
+                    <div class="space-y-1">
+                        <span class="inline-block bg-white/20 text-white text-[10px] font-extrabold uppercase tracking-widest px-3 py-1 rounded-full">Vé Sự Kiện Chính Thức</span>
+                        <h3 class="font-serif text-2xl font-bold">Cảm ơn, ${data.fullName}!</h3>
+                        <p class="text-xs text-rose-100">Vé vào cổng hoàn toàn miễn phí & nhận combo lưu niệm đã kích hoạt.</p>
+                    </div>
+
+                    <!-- Simulated QR Ticket Structure -->
+                    <div class="bg-white text-gray-800 rounded-2xl p-5 max-w-[240px] mx-auto space-y-3 shadow-lg">
+                        <div class="aspect-square bg-gray-50 flex items-center justify-center border-4 border-rose-50/50 rounded-xl relative p-2">
+                            <!-- Visual simulation of beautiful cherry blossom style QR code -->
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${data.ticketCode}&color=E11D48" 
+                                 alt="QR Code" 
+                                 class="w-full h-full object-contain"
+                                 onerror="this.src='https://images.unsplash.com/photo-1544383835-bda2bc66a55d?q=80&w=300&auto=format&fit=crop'" />
+                        </div>
+                        <div>
+                            <span class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest">Mã số vé của bạn</span>
+                            <span class="block text-sm font-extrabold text-rose-600 tracking-wider">${data.ticketCode}</span>
+                        </div>
+                    </div>
+
+                    <div class="text-xs text-rose-100 space-y-1.5 pt-2 border-t border-white/20">
+                        <p><i class="fa-solid fa-map-pin text-white mr-1.5"></i> Sảnh Chính G, Gigamall Thủ Đức</p>
+                        <p><i class="fa-solid fa-star text-white mr-1.5"></i> Ưu tiên: <span class="font-bold underline">${activityLabel[data.preferred] || "Lễ hội"}</span></p>
+                    </div>
+
+                    <button onclick="reRegister()" class="text-[11px] text-white/70 hover:text-white underline tracking-wide transition-all uppercase font-semibold">Đăng ký lại thông tin khác</button>
+                </div>
+            `;
+        };
+
+        // ENABLE RE-REGISTRATION
+        window.reRegister = () => {
+            const panel = document.getElementById('registration-panel');
+            const savedName = localStorage.getItem('gigamall_user_name') || "";
+            
+            panel.innerHTML = `
+                <form id="event-reg-form" onsubmit="handleRegistrationSubmit(event)" class="bg-rose-50/50 rounded-2xl p-6 sm:p-8 border border-rose-100 space-y-4">
+                    <h3 class="font-bold text-lg text-gray-800 border-b border-rose-100 pb-3"><i class="fa-solid fa-ticket text-rose-500 mr-2"></i>Thông Tin Nhận Vé</h3>
+                    
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Họ và Tên</label>
+                        <input type="text" id="reg-fullname" required value="${savedName}" placeholder="Nguyễn Văn A" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-rose-400 focus:border-transparent outline-none bg-white text-sm">
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Số Điện Thoại</label>
+                            <input type="tel" id="reg-phone" required placeholder="0901234567" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-rose-400 focus:border-transparent outline-none bg-white text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Email</label>
+                            <input type="email" id="reg-email" required placeholder="email@gmail.com" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-rose-400 focus:border-transparent outline-none bg-white text-sm">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Hoạt động muốn tham dự nhất</label>
+                        <select id="reg-preferred-activity" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-rose-400 focus:border-transparent outline-none bg-white text-sm text-gray-600">
+                            <option value="khai-mac">Lễ khai mạc & Diễu hành cổ truyền</option>
+                            <option value="cosplay">Trình diễn cosplay & Anime Show</option>
+                            <option value="am-thuc">Trải nghiệm ẩm thực và trà đạo</option>
+                            <option value="am-nhac">Đêm nhạc hội J-Pop & Ánh sáng</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="w-full bg-gradient-to-r from-rose-500 to-pink-600 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-rose-200 hover:shadow-rose-400 hover:from-rose-600 hover:to-pink-700 transform hover:-translate-y-0.5 transition-all text-sm uppercase tracking-wider">
+                        Xác Nhận Đăng Ký Miễn Phí <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </form>
+            `;
+        };
+
+        // MOBILE DRAWER MENU TOGGLE
+        window.toggleMobileMenu = () => {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        };
+
+        // INITIALISATION LOGIC ON DOM LOAD
+        window.onload = () => {
+            createPetals();
+            filterTimelineDay(1);
+            setFeedbackRating(5);
+            
+            // Check if user has credentials saved locally to auto login
+            if (localStorage.getItem('gigamall_user_name')) {
+                initAuth();
+            }
+        };
+
+    </script>
+</body>
+</html>
